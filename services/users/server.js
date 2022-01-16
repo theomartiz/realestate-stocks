@@ -1,10 +1,29 @@
-'use strict';
+const koa = require('koa');
+const koaRouter = require('@koa/router');
 
-const Koa = require('koa');
-const app = new Koa();
+let router = koaRouter();
+let app = new koa();
 
-app.use(ctx => {
-  ctx.body = 'Hello World';
+app.use(async (ctx,next) => {
+    const start = new Date;
+    await next();
+    const ms = new Date - start;
+    console.log('%s %s - %sms', ctx.method, ctx.url, ms);
 });
 
-app.listen(1234);
+router.get('/api/users', async (ctx) => {
+    ctx.body = "List of users...";
+});
+
+
+router.get('/api/', async (ctx) => {
+    ctx.body = "API ready to receive requests";
+});
+
+router.get('/', async (ctx) => {
+    ctx.body = "Ready to receive requests";
+});
+
+app.use(router.routes()).use(router.allowedMethods());
+
+app.listen(3000);
