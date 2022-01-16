@@ -12,7 +12,7 @@ app.use(async (ctx,next) => {
 });
 
 router.get('/api/wallets', async (ctx) => {
-    ctx.body = "List of users...";
+    ctx.body = "List of wallets...";
 });
 
 
