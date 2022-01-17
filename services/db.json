@@ -1,0 +1,45 @@
+[
+  {
+    "id": 1,
+    "name": "Angeles paradise",
+    "buildingType": "Villa",
+    "address": "Los Angeles",
+    "fundingObjective": "1000000",
+    "currentFunding": "2000",
+    "description": "A nice 400 square foot villa on top of LA hills.",
+    "expectedYield": "2%",
+    "postDate": "01/17/2022",
+    "endDate": "02/17/2022",
+    "contributions": []
+  },
+  {
+    "id": 2,
+    "name": "Paris paradise",
+    "buildingType": "Hotel",
+    "address": "Paris",
+    "fundingObjective": "333321",
+    "currentFunding": "0",
+    "description": "A 12 floor hotel on top near the Eifel Tower",
+    "expectedYield": "7%",
+    "postDate": "01/21/2022",
+    "endDate": "04/22/2022",
+    "contributions": []
+  },
+  {
+    "id": 3,
+    "name": "La Paz park",
+    "buildingType": "Parking",
+    "address": "La Paz",
+    "fundingObjective": "300000",
+    "currentFunding": "50000",
+    "description": "A 4 floors parking with over 11",
+    "expectedYield": "3%",
+    "postDate": "01/02/2022",
+    "endDate": "05/14/2022",
+    "contributions": []
+  },
+  {
+    "id": 1,
+    "name": "Angeles baby"
+  }
+]

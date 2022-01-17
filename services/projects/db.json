@@ -1,0 +1,30 @@
+{
+  "projects": [
+    {
+      "id": 1,
+      "name": "Angeles paradise",
+      "buildingType": "Villa",
+      "address": "Los Angeles",
+      "fundingObjective": "1000000",
+      "currentFunding": "2000",
+      "description": "A nice 400 square foot villa on top of LA hills.",
+      "expectedYield": "2%",
+      "postDate": "01/17/2022",
+      "endDate": "02/17/2022",
+      "contributions": []
+    },
+    {
+      "id": 3,
+      "name": "La Paz park",
+      "buildingType": "Parking",
+      "address": "La Paz",
+      "fundingObjective": "300000",
+      "currentFunding": "50000",
+      "description": "A 4 floors parking with over 11",
+      "expectedYield": "3%",
+      "postDate": "01/02/2022",
+      "endDate": "05/14/2022",
+      "contributions": []
+    }
+  ]
+}
