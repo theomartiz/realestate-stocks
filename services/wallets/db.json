@@ -1,0 +1,35 @@
+{
+  "wallets": [
+    {
+      "userId": 1,
+      "projects": [
+        {
+          "projectId": 1,
+          "partOwned": 0.4
+        }
+      ]
+    },
+    {
+      "userId": 3,
+      "projects": [
+        {
+          "projectId": 2,
+          "partOwned": 0.32
+        }
+      ]
+    },
+    {
+      "userId": 2,
+      "projects": [
+        {
+          "projectId": 1,
+          "partOwned": 0.1
+        },
+        {
+          "projectId": 3,
+          "partOwned": 0.67
+        }
+      ]
+    }
+  ]
+}
