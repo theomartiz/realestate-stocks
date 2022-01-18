@@ -1,0 +1,236 @@
+{
+	"info": {
+		"_postman_id": "49adf5de-3d57-4bab-b4a2-c4048aa1263e",
+		"name": "Archi distri",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get projects",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/projects",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"projects"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get project by ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/projects/:2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"projects",
+						":2"
+					],
+					"variable": [
+						{
+							"key": "2",
+							"value": null
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get inexistant project by Id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/projects/:40",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"projects",
+						":40"
+					],
+					"variable": [
+						{
+							"key": "40",
+							"value": null
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete project",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/projects/:2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"projects",
+						":2"
+					],
+					"variable": [
+						{
+							"key": "2",
+							"value": null
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete inexistant project",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/projects/:40",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"projects",
+						":40"
+					],
+					"variable": [
+						{
+							"key": "40",
+							"value": null
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add project",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n      \"name\": \"French Alpes hotel\",\r\n      \"buildingType\": \"Hotel\",\r\n      \"address\": \"les Arcs 2000\",\r\n      \"fundingObjective\": \"1000000\",\r\n      \"currentFunding\": \"2000\",\r\n      \"description\": \"A nice hotel near the skis slopes at tha Arcs 2000 station.\",\r\n      \"expectedYield\": \"5%\",\r\n      \"postDate\": \"01/17/2022\",\r\n      \"endDate\": \"02/17/2022\",\r\n      \"contributions\": []\r\n    }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/projects",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"projects"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update existant project",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n      \"name\": \"Paris PARADISE\",\r\n      \"buildingType\": \"Hotel\",\r\n      \"address\": \"Paris\",\r\n      \"fundingObjective\": \"333321\",\r\n      \"currentFunding\": \"0\",\r\n      \"description\": \"A 14 floor hotel on top near the Eifel Tower\",\r\n      \"expectedYield\": \"7%\",\r\n      \"postDate\": \"01/21/2022\",\r\n      \"endDate\": \"04/22/2022\",\r\n      \"contributions\": []\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/projects/:3",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"projects",
+						":3"
+					],
+					"variable": [
+						{
+							"key": "3",
+							"value": null
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update inexistant project",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n      \"name\": \"Paris PARADISE\",\r\n      \"buildingType\": \"Hotel\",\r\n      \"address\": \"Paris\",\r\n      \"fundingObjective\": \"333321\",\r\n      \"currentFunding\": \"0\",\r\n      \"description\": \"A 14 floor hotel on top near the Eifel Tower\",\r\n      \"expectedYield\": \"7%\",\r\n      \"postDate\": \"01/21/2022\",\r\n      \"endDate\": \"04/22/2022\",\r\n      \"contributions\": []\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/projects/:40",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"projects",
+						":40"
+					],
+					"variable": [
+						{
+							"key": "40",
+							"value": null
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

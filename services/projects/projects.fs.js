@@ -39,15 +39,33 @@ const getProjectById = async (id) => {
     return db.projects.find((project) => project.id == id);
 }
 
-const updateProjectById = async (project) => {
+const updateProjectById = async (newProject, oldProjectId) => {
     //Find the project with given id in the db
-    var projectToUpdateIndex = db.projects.findIndex((proj) => proj.id == project.id);
+    var projectToUpdateIndex = db.projects.findIndex((proj) => proj.id == oldProjectId);
 
-    db.projects.splice(projectToUpdateIndex, 1, project);
+    if(projectToUpdateIndex != -1){
+        
+        var project = {
+            id : parseInt(oldProjectId),
+            name: newProject.name,
+            buildingType: newProject.buildingType,
+            address: newProject.address,
+            fundingObjective: newProject.fundingObjective,
+            currentFunding: newProject.currentFunding,
+            description: newProject.description,
+            expectedYield: newProject.expectedYield,
+            postDate: newProject.postDate,
+            endDate: newProject.endDate,
+            contributions: newProject.contributions,
+        }
+        db.projects.splice(projectToUpdateIndex, 1, project);
 
-    var data = JSON.stringify(db, null, 2);
-    fs.writeFile("db.json", data, finished);
-
+        var data = JSON.stringify(db, null, 2);
+        fs.writeFile("db.json", data, finished);
+    }else{
+        return -1;
+    }
+   
     function finished(){
         console.log("Project with id: " + project.id + " has been updated.");
     }
@@ -56,14 +74,17 @@ const updateProjectById = async (project) => {
 const removeById = async (id) => {
     //Find the project with given id in the db
     var projectIndex = db.projects.findIndex((project) => project.id == id);
-    db.projects.splice(projectIndex, 1);
-
-    var data = JSON.stringify(db, null, 2);
-    fs.writeFile("db.json", data, finished);
-
-        function finished(){
-            console.log("Project with id: " + id + " removed from database.");
-        }
+    if(projectIndex >= 0){
+        db.projects.splice(projectIndex, 1);
+        var data = JSON.stringify(db, null, 2);
+        fs.writeFile("db.json", data, finished);     
+    }else{
+        return -1;
+    }
+   
+    function finished(){
+        console.log("Project with id: " + id + " removed from database.");
+    }
 
 }
 

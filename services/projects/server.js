@@ -1,6 +1,7 @@
 const koa = require('koa');
 const koaRouter = require('@koa/router');
 const bodyParser  = require('koa-bodyparser');
+const db = require('./db.json');
 
 const { createProject, getAllProjects, getProjectById, removeById, updateProjectById } = require('./projects.fs');
 
@@ -26,15 +27,26 @@ router.get(BASE_URL, async (ctx) => {
 router.get(BASE_URL + '/:projectId', async (ctx) => {
     //To get the param by removing the ":"
     var id = ctx.params.projectId.replace(":", "");
-    ctx.body = await getProjectById(id);
+    var project = await getProjectById(id); 
+    
+    if(project != null){
+        ctx.body = project;
+    }else{
+        ctx.body = "No project found with such ID";
+    }
 });
 
 router.delete(BASE_URL + '/:projectId', async (ctx) => {
     //To get the param by removing the ":"
     var id = ctx.params.projectId.replace(":", "");
-    await removeById(id);
-    ctx.body = "Project with id: " + id + " removed from database"
-});
+    var projectToRemove = db.projects.find((project) => project.id == id);
+    if(projectToRemove != null){
+        await removeById(id);
+        ctx.body = "Project with id: " + id + " removed from database"
+    }else{
+        ctx.body = "No project found with such ID";
+    }
+});  
 
 
 router.post(BASE_URL, async  (ctx) =>{
@@ -44,9 +56,16 @@ router.post(BASE_URL, async  (ctx) =>{
 });
 
 router.put(BASE_URL + '/:projectId', async  (ctx) =>{
-    var project = ctx.request.body;
-    await updateProjectById(project);
-    ctx.body = "The following object has been updated in the database : \n" + JSON.stringify(project, null, 2)
+    
+    var newProject = ctx.request.body;
+    var id = ctx.params.projectId.replace(":", "");
+    var result = await updateProjectById(newProject, id);
+    
+    if(result != -1){      
+        ctx.body = "Project with id: " + id + " has been updated."
+    }else{
+        ctx.body = "No project found with such ID";
+    }
 });
 
 
