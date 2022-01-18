@@ -33,6 +33,7 @@ router.get(BASE_URL + '/:projectId', async (ctx) => {
         ctx.body = project;
     }else{
         ctx.body = "No project found with such ID";
+        ctx.status = 406;
     }
 });
 
@@ -45,6 +46,7 @@ router.delete(BASE_URL + '/:projectId', async (ctx) => {
         ctx.body = "Project with id: " + id + " removed from database"
     }else{
         ctx.body = "No project found with such ID";
+        ctx.status = 406;
     }
 });  
 
@@ -65,6 +67,7 @@ router.put(BASE_URL + '/:projectId', async  (ctx) =>{
         ctx.body = "Project with id: " + id + " has been updated."
     }else{
         ctx.body = "No project found with such ID";
+        ctx.status = 406;
     }
 });
 
