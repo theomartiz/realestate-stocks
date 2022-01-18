@@ -5,7 +5,7 @@ const db = require('./db.json');
 const createProject = async (newProject) => {
     //We retrieve the first id that is available
     var firstAvailableId = getFirstAvailableId(db.projects);
-    
+
     var project = {
         id : firstAvailableId,
         name: newProject.name,
@@ -28,7 +28,7 @@ const createProject = async (newProject) => {
     function finished(){
         console.log("db updated")
     }
-        
+
 }
 
 const getAllProjects = async () => {
@@ -44,7 +44,7 @@ const updateProjectById = async (newProject, oldProjectId) => {
     var projectToUpdateIndex = db.projects.findIndex((proj) => proj.id == oldProjectId);
 
     if(projectToUpdateIndex != -1){
-        
+
         var project = {
             id : parseInt(oldProjectId),
             name: newProject.name,
@@ -65,7 +65,7 @@ const updateProjectById = async (newProject, oldProjectId) => {
     }else{
         return -1;
     }
-   
+
     function finished(){
         console.log("Project with id: " + project.id + " has been updated.");
     }
@@ -77,11 +77,11 @@ const removeById = async (id) => {
     if(projectIndex >= 0){
         db.projects.splice(projectIndex, 1);
         var data = JSON.stringify(db, null, 2);
-        fs.writeFile("db.json", data, finished);     
+        fs.writeFile("db.json", data, finished);
     }else{
         return -1;
     }
-   
+
     function finished(){
         console.log("Project with id: " + id + " removed from database.");
     }
@@ -97,7 +97,7 @@ function getFirstAvailableId(array){
     return  array.length + 1;
 }
 
-module.exports = 
+module.exports =
 {
     createProject,
     getAllProjects,

@@ -5,7 +5,7 @@ const db = require('./db.json');
 
 
 const { createWallet, getAllWallets, getWalletById, removeWalletById, updateWalletById, getWalletValueByProjectId, getWalletValueByUserId } = require('./wallets.fs');
-
+const {getProjectById} = require('../projects/projects.fs');
 
 let router = koaRouter();
 let app = new koa();
@@ -86,8 +86,8 @@ router.get(BASE_URL + '/:userId' + '/sharesValue' + '/:projectId', async (ctx) =
 
     var partOwned = await getWalletValueByProjectId(userId, projectId);
 
-    //var fundingObjective = await getProjectFundingObjective(projects[i].projectId); TODO
-    var fundingObjective = 100; //Here we have a fix value to test the code
+    var project = await getProjectById(projectId);
+    var fundingObjective = project.fundingObjective;
 
     if(partOwned != -1){
       ctx.body = "This user has: " + (partOwned*100) + "% of the project:" + projectId
@@ -110,10 +110,10 @@ router.get(BASE_URL + '/:userId' + '/sharesValue', async (ctx) => {
     if(projects != -1){
 
       for (var i = 0; i < projects.length; i++) {
-        //var fundingObjective = await getProjectFundingObjective(projects[i].projectId); TODO
-        var fundingObjective = 100; //Here we have a fix value to test the code
+        var project = await getProjectById(projects[i].projectId);
+        var fundingObjective = project.fundingObjective;
 
-        totalValue += (fundingObjective*projects[i].partOwned);
+        totalValue += (fundingObjective*(projects[i].partOwned));
       }
 
       ctx.body = "This user has in his wallet the equivalent of : $" + totalValue + " in shares";
