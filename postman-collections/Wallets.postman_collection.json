@@ -1,0 +1,160 @@
+{
+	"info": {
+		"_postman_id": "0dcf5daf-81c4-44ac-b329-0e88b48ce7fe",
+		"name": "Wallet-tests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get wallets",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/api/wallets",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"wallets"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get wallet of a user",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/api/wallets/2",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"wallets",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete wallet of a user",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/api/wallets/5",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"wallets",
+						"5"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create wallet of a user",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/api/wallets/2",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"wallets",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Modify wallet of a user",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"projects\": [\n        {\n          \"projectId\": 1,\n          \"partOwned\": 0.021\n        }, \n        {\n          \"projectId\": 2,\n          \"partOwned\": 0.021\n        }\n      ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/api/wallets/2",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"wallets",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get value of shares of a project owned by a user",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/api/wallets/1/sharesValue/11",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"wallets",
+						"1",
+						"sharesValue",
+						"11"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get value of the shares owned by a user",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/api/wallets/2/sharesValue",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"wallets",
+						"2",
+						"sharesValue"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
