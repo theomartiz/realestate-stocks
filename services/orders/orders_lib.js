@@ -7,7 +7,6 @@ const createOrder = async (newOrder) => {
         id : getFirstAvailableId(db),
         orderDate: newOrder.orderDate,
         userId: newOrder.userId,
-        orderId: newOrder.orderId,
         walletId: newOrder.walletId,
         amount: newOrder.amount,
     }
@@ -40,7 +39,6 @@ const updateOrderById = async (newOrder, oldOrderId) => {
             id : parseInt(oldOrderId),
             orderDate: newOrder.orderDate,
             userId: newOrder.userId,
-            orderId: newOrder.orderId,
             walletId: newOrder.walletId,
             amount: newOrder.amount,
         }
