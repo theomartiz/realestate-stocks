@@ -1,15 +1,18 @@
-const koa = require('koa');
-const koaRouter = require('@koa/router');
+import {PublishCommand } from "@aws-sdk/client-sns";
+import {snsClient } from "./snsClient.js";
 
-const db = require("./db.json");
-const fs = require("fs");
-const { createOrder, getAllOrders, getOrderById, removeOrderById, updateOrderById } = require('./orders_lib.js');
+import koa from 'koa';
+import koaRouter from '@koa/router';
+
+import db from "./db.json";
+import fs from "fs";
+import {createOrder, getAllOrders, getOrderById, removeOrderById, updateOrderById} from './orders_lib.js';
 
 let router = koaRouter();
 let app = new koa();
 const BASE_URL = "/api/orders"
 
-const bodyParser  = require('koa-bodyparser');
+import bodyParser from 'koa-bodyparser';
 app.use(bodyParser());
 
 app.use(async (ctx,next) => {
@@ -41,6 +44,25 @@ router.get(BASE_URL + '/:orderId', async (ctx) => {
 router.post(BASE_URL, async (ctx) => {
     await createOrder(ctx.request.body);
     ctx.body = "The following object has been added to the database : \n" + JSON.stringify(ctx.request.body, null, 2);
+
+    // Set the parameters
+    var params = {
+        Message: "test", // MESSAGE_TEXT
+        TopicArn: "arn:aws:sns:us-east-1:595534413965:ordersFunding.fifo", //TOPIC_ARN
+    };
+    
+    const run = async () => {
+        try {
+        const data = await snsClient.send(new PublishCommand(params));
+        console.log("Success.",  data);
+        return data; // For unit tests.
+        } catch (err) {
+        console.log("Error", err.stack);
+        }
+    };
+    run();
+
+
 });
 
 router.put(BASE_URL + '/:orderId', async  (ctx) =>{

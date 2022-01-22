@@ -1,7 +1,7 @@
-const fs = require("fs");
-const db = require("./db.json");
+import db from "./db.json";
+import fs from "fs";
 
-const createOrder = async (newOrder) => {
+export const createOrder = async (newOrder) => {
     
     var order = {
         id : getFirstAvailableId(db),
@@ -22,15 +22,15 @@ const createOrder = async (newOrder) => {
     }
 }
 
-const getAllOrders = async () => {
+export const getAllOrders = async () => {
     return db.orders;
 }
 
-const getOrderById = async (id) => {
+export const getOrderById = async (id) => {
     return db.orders.find((order) => order.id == id);
 }
 
-const updateOrderById = async (newOrder, oldOrderId) => {
+export const updateOrderById = async (newOrder, oldOrderId) => {
     
     var orderToUpdateIndex = db.orders.findIndex((proj) => proj.id == oldOrderId);
 
@@ -57,7 +57,7 @@ const updateOrderById = async (newOrder, oldOrderId) => {
     }
 }
 
-const removeOrderById = async (id) => {
+export const removeOrderById = async (id) => {
     
     var orderIndex = db.orders.findIndex((order) => order.id == id);
     if(orderIndex >= 0){
@@ -76,13 +76,4 @@ const removeOrderById = async (id) => {
 
 function getFirstAvailableId(obj){
     return  Object.keys(obj.orders).length + 1;
-}
-
-module.exports = 
-{
-    createOrder,
-    getAllOrders,
-    getOrderById,
-    removeOrderById,
-    updateOrderById
 }
