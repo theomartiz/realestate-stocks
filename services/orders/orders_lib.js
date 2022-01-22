@@ -8,6 +8,7 @@ const createOrder = async (newOrder) => {
         orderDate: newOrder.orderDate,
         userId: newOrder.userId,
         walletId: newOrder.walletId,
+        projectId: newOrder.projectId,
         amount: newOrder.amount,
     }
 
@@ -40,6 +41,7 @@ const updateOrderById = async (newOrder, oldOrderId) => {
             orderDate: newOrder.orderDate,
             userId: newOrder.userId,
             walletId: newOrder.walletId,
+            projectId: newOrder.projectId,
             amount: newOrder.amount,
         }
         db.orders.splice(orderToUpdateIndex, 1, order);
