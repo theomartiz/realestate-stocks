@@ -3,8 +3,8 @@
     {
       "id": 1,
       "orderDate": "1642544809",
-      "userId": "1",
-      "walletId": "55",
+      "userIdBuy": "1",
+      "userIdSell": "2",
       "projectId": "45",
       "amount": "70500"
     }
