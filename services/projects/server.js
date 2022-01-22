@@ -5,6 +5,26 @@ const db = require('./db.json');
 
 const { createProject, getAllProjects, getProjectById, removeById, updateProjectById } = require('./projects.fs');
 
+// Load the AWS SDK for Node.js
+const AWS = require('aws-sdk');
+// Set the region
+AWS.config.update({region: 'us-east-1'});
+AWS.config.credentials
+// Create SQS service object
+const sqs = new AWS.SQS({apiVersion: 'latest'});
+// Replace with your accountid and the queue name you setup
+const accountId = '595534413965';
+const queueName = 'projectsQueue.fifo';
+const queueUrl = `https://sqs.us-east-1.amazonaws.com/${accountId}/${queueName}`;
+
+
+// Setup the receiveMessage parameters
+const params = {
+    QueueUrl: queueUrl,
+    MaxNumberOfMessages: 1,
+    VisibilityTimeout: 5,
+    WaitTimeSeconds: 5
+};
 
 let router = koaRouter();
 let app = new koa();
@@ -71,6 +91,35 @@ router.put(BASE_URL + '/:projectId', async  (ctx) =>{
     }
 });
 
+receiveMessageFromQueue();
+
+function receiveMessageFromQueue(){
+    sqs.receiveMessage(params, (err, data) => {
+        if (err) {
+            console.log(err, err.stack);
+          } else {
+            if (!data.Messages) { 
+              console.log('Nothing to process');
+              return receiveMessageFromQueue();          
+            }
+            
+            //TODO: DO THINGS TO UPDATE PROJECTS
+            const deleteParams = {
+              QueueUrl: queueUrl,
+              ReceiptHandle: data.Messages[0].ReceiptHandle
+            };
+            sqs.deleteMessage(deleteParams, (err, data) => {
+              if (err) {
+                console.log(err, err.stack);
+              } else {
+                console.log('Successfully deleted message from queue');
+                return receiveMessageFromQueue();                
+              }
+            });
+        }  
+    });              
+}
+   
 
 app.use(router.routes()).use(router.allowedMethods());
 
