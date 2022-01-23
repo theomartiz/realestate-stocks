@@ -44,26 +44,47 @@ router.get(BASE_URL + '/:orderId', async (ctx) => {
 router.post(BASE_URL, async (ctx) => {
     await createOrder(ctx.request.body);
     ctx.body = "The following object has been added to the database : \n" + JSON.stringify(ctx.request.body, null, 2);
-
-    // Set the parameters
-    var params = {
-        Message: JSON.stringify(ctx.request.body, null, 2), // MESSAGE_TEXT
-        MessageGroupId: "gage",
-        MessageDeduplicationId: Object.keys(db.orders).length + 1,
-        TopicArn: "arn:aws:sns:us-east-1:595534413965:ordersFunding.fifo", //TOPIC_ARN
-    };
     
-    const run = async () => {
-        try {
-        const data = await snsClient.send(new PublishCommand(params));
-        console.log("Success.",  data);
-        return data; // For unit tests.
-        } catch (err) {
-        console.log("Error", err.stack);
-        }
-    };
-    run();
+    if (ctx.request.body.userIdSell == 0) {
 
+        var params = {
+            Message: JSON.stringify(ctx.request.body, null, 2), // MESSAGE_TEXT
+            MessageGroupId: "OrdersFunding",
+            MessageDeduplicationId: Object.keys(db.orders).length,
+            TopicArn: "arn:aws:sns:us-east-1:595534413965:ordersFunding.fifo", //TOPIC_ARN
+        };
+        
+        const run = async () => {
+            try {
+            const data = await snsClient.send(new PublishCommand(params));
+            console.log("Order funding success.",  data);
+            return data; // For unit tests.
+            } catch (err) {
+            console.log("Error (order funding)", err.stack);
+            }
+        };
+        run();
+    }
+    else{
+
+        var params = {
+            Message: JSON.stringify(ctx.request.body, null, 2), // MESSAGE_TEXT
+            MessageGroupId: "OrdersRunning",
+            MessageDeduplicationId: Object.keys(db.orders).length,
+            TopicArn: "arn:aws:sns:us-east-1:595534413965:ordersRunning.fifo", //TOPIC_ARN
+        };
+        
+        const run = async () => {
+            try {
+            const data = await snsClient.send(new PublishCommand(params));
+            console.log("Order running success.",  data);
+            return data; // For unit tests.
+            } catch (err) {
+            console.log("Error (order running)", err.stack);
+            }
+        };
+        run();
+    }
 
 });
 
