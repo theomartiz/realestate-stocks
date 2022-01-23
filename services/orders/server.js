@@ -47,7 +47,9 @@ router.post(BASE_URL, async (ctx) => {
 
     // Set the parameters
     var params = {
-        Message: "test", // MESSAGE_TEXT
+        Message: JSON.stringify(ctx.request.body, null, 2), // MESSAGE_TEXT
+        MessageGroupId: "gage",
+        MessageDeduplicationId: Object.keys(db.orders).length + 1,
         TopicArn: "arn:aws:sns:us-east-1:595534413965:ordersFunding.fifo", //TOPIC_ARN
     };
     
