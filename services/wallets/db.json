@@ -1,11 +1,15 @@
 {
   "wallets": [
     {
-      "userId": 1,
+      "userId": 5,
       "projects": [
         {
-          "projectId": 1,
-          "partOwned": 0.4
+          "projectId": 2,
+          "partOwned": 0
+        },
+        {
+          "projectId": 3,
+          "partOwned": 67
         }
       ]
     },
@@ -14,7 +18,7 @@
       "projects": [
         {
           "projectId": 2,
-          "partOwned": 0.32
+          "partOwned": 32
         }
       ]
     },
@@ -23,11 +27,24 @@
       "projects": [
         {
           "projectId": 1,
-          "partOwned": 0.1
+          "partOwned": 1
         },
         {
           "projectId": 3,
-          "partOwned": 0.67
+          "partOwned": 67
+        }
+      ]
+    },
+    {
+      "userId": 10,
+      "projects": [
+        {
+          "projectId": 3,
+          "partOwned": 67
+        },
+        {
+          "projectId": 2,
+          "partOwned": 200
         }
       ]
     }

@@ -4,8 +4,30 @@ const bodyParser  = require('koa-bodyparser');
 const db = require('./db.json');
 
 
-const { createWallet, getAllWallets, getWalletById, removeWalletById, updateWalletById, getWalletValueByProjectId, getWalletValueByUserId } = require('./wallets.fs');
+const { createWallet, getAllWallets, getWalletById, removeWalletById, updateWalletById, getWalletValueByProjectId, getWalletValueByUserId, exchangeWalletToWallet } = require('./wallets.fs');
 const {getProjectById} = require('../projects/projects.fs');
+
+// Load the AWS SDK for Node.js
+ const AWS = require('aws-sdk');
+ // Set the region
+ AWS.config.update({region: 'us-east-1'});
+ AWS.config.credentials
+ // Create SQS service object
+ const sqs = new AWS.SQS({apiVersion: 'latest'});
+ // Replace with your accountid and the queue name you setup
+ const accountId = '595534413965';
+ const queueName = 'walletsQueue.fifo';
+ const queueUrl = `https://sqs.us-east-1.amazonaws.com/${accountId}/${queueName}`;
+
+
+ // Setup the receiveMessage parameters
+ const params = {
+     QueueUrl: queueUrl,
+     MaxNumberOfMessages: 1,
+     VisibilityTimeout: 5,
+     WaitTimeSeconds: 5
+ };
+
 
 let router = koaRouter();
 let app = new koa();
@@ -87,11 +109,11 @@ router.get(BASE_URL + '/:userId' + '/sharesValue' + '/:projectId', async (ctx) =
     var partOwned = await getWalletValueByProjectId(userId, projectId);
 
     var project = await getProjectById(projectId);
-    var fundingObjective = project.fundingObjective;
+    var stockPrice = project.stockPrice;
 
     if(partOwned != -1){
-      ctx.body = "This user has: " + (partOwned*100) + "% of the project:" + projectId
-      + " which is equal to $" + (fundingObjective*partOwned);
+      ctx.body = "This user has: " + (partOwned) + " shares of the project:" + projectId
+      + " which is equal to $" + (stockPrice*partOwned);
     }else{
       ctx.body = "This user does not have shares in this project";
       ctx.status = 406;
@@ -111,9 +133,9 @@ router.get(BASE_URL + '/:userId' + '/sharesValue', async (ctx) => {
 
       for (var i = 0; i < projects.length; i++) {
         var project = await getProjectById(projects[i].projectId);
-        var fundingObjective = project.fundingObjective;
+        var stockPrice = project.fundingObjective;
 
-        totalValue += (fundingObjective*(projects[i].partOwned));
+        totalValue += (stockPrice*(projects[i].partOwned));
       }
 
       ctx.body = "This user has in his wallet the equivalent of : $" + totalValue + " in shares";
@@ -122,6 +144,46 @@ router.get(BASE_URL + '/:userId' + '/sharesValue', async (ctx) => {
       ctx.status = 406;
     }
 });
+
+
+receiveMessageFromQueue();
+
+ function receiveMessageFromQueue(){
+     sqs.receiveMessage(params, (err, data) => {
+         if (err) {
+             console.log(err, err.stack);
+           } else {
+             if (!data.Messages) {
+               console.log('Nothing to process');
+               return receiveMessageFromQueue();
+             }
+
+             //TODO: DO THINGS TO UPDATE PROJECTS
+             console.log(data.Messages[0].Body)
+             let userInfos = JSON.parse(data.Messages[0].Body).Message;
+             console.log("userInfos: " + userInfos);
+             //createUser(JSON.parse(userInfos));
+             console.log("---------")
+             exchangeWalletToWallet(JSON.parse(userInfos));
+
+             console.log("---------")
+             console.log(data);
+
+             const deleteParams = {
+               QueueUrl: queueUrl,
+               ReceiptHandle: data.Messages[0].ReceiptHandle
+             };
+             sqs.deleteMessage(deleteParams, (err, data) => {
+               if (err) {
+                 console.log(err, err.stack);
+               } else {
+                 console.log('Successfully deleted message from queue');
+                 return receiveMessageFromQueue();
+               }
+             });
+         }
+     });
+ }
 
 
 app.use(router.routes()).use(router.allowedMethods());

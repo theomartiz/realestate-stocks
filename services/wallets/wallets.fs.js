@@ -89,7 +89,80 @@ const getWalletValueByUserId = async (userId) => {
     }else{
       return -1;
     }
+}
 
+const exchangeWalletToWallet = async (jsonQuery) => {
+    //Find the wallet with given id in the db
+    var userIdBuy= jsonQuery.userIdBuy;
+    var userIdSell= jsonQuery.userIdSell;
+    var projectId= jsonQuery.projectId;
+    var amount= jsonQuery.amount;
+
+
+    console.log('userIdBuy: ' + userIdBuy);
+    console.log('userIdSell: ' + userIdSell);
+    console.log('projectId: ' + projectId);
+    console.log('amount: ' + amount);
+
+
+    var walletBuy = await getWalletById(userIdBuy);
+    var walletSell = await getWalletById(userIdSell);
+
+    console.log('walletBuy: ' + walletBuy.userId);
+    console.log('walletSell: ' + walletSell.userId);
+
+
+    var walletSellPartOwned = await getWalletValueByProjectId(userIdSell, projectId);
+
+    console.log('walletSellPartOwned: ' + walletSellPartOwned);
+
+    //If the seller has the shares
+    if (walletSellPartOwned != -1 && walletSellPartOwned >= amount) {
+      var partOwnedIndexSell = walletSell.projects.findIndex((project) => project.projectId == projectId);
+      walletSell.projects[partOwnedIndexSell].partOwned = parseInt(walletSell.projects[partOwnedIndexSell].partOwned) - parseInt(amount);
+
+      console.log('partOwnedIndexSell: ' + partOwnedIndexSell);
+      console.log('partOwnedSellAfterTransaction: ' + walletSell.projects[partOwnedIndexSell].partOwned);
+
+
+      var partOwnedIndexBuy = walletBuy.projects.findIndex((project) => project.projectId == projectId);
+
+      console.log('partOwnedIndexBuy: ' + partOwnedIndexBuy);
+
+      //If the buyer already has shares
+      if(partOwnedIndexBuy != -1){
+        walletBuy.projects[partOwnedIndexBuy].partOwned = parseInt(walletBuy.projects[partOwnedIndexBuy].partOwned) + parseInt(amount);
+
+        console.log('partOwnedBuy: ' + walletBuy.projects[partOwnedIndexBuy].partOwned);
+
+      }else{
+        var length = walletBuy.projects.length;
+
+        var project = {
+            projectId : parseInt(projectId),
+            partOwned: parseInt(amount),
+        };
+
+        walletBuy.projects[length] = project;
+
+        console.log('partOwnedBuy: ' + walletBuy.projects[length].partOwned);
+
+      }
+
+      db.wallets.splice(partOwnedIndexSell, 1, walletSell);
+      db.wallets.splice(partOwnedIndexBuy, 1, walletBuy);
+
+      var data = JSON.stringify(db, null, 2);
+      fs.writeFile("db.json", data, finished);
+
+    }else{
+      console.log("Seller wallet doesnt have enough shares")
+      return -1;
+    }
+
+    function finished(){
+        console.log("db updated")
+    }
 
 }
 
@@ -103,5 +176,6 @@ module.exports =
     removeWalletById,
     updateWalletById,
     getWalletValueByProjectId,
-    getWalletValueByUserId
+    getWalletValueByUserId,
+    exchangeWalletToWallet
 }
