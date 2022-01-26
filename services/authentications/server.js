@@ -1,8 +1,16 @@
-const koa = require('koa');
-const koaRouter = require('@koa/router');
+import {PublishCommand} from "@aws-sdk/client-sns";
+import  {snsClient} from "./libs/snsClient.js";
+import koaRouter from '@koa/router';
+import koa from 'koa';
+import bodyParser from 'koa-bodyparser';
+import db from "./db.json";
+
+import { createCredentials, updatePassword, deleteCredentials, checkCredentials} from './authentications.fs.js';
 
 let router = koaRouter();
 let app = new koa();
+app.use(bodyParser());
+const BASE_URL = "/api/authentications"
 
 app.use(async (ctx,next) => {
     const start = new Date;
@@ -11,17 +19,68 @@ app.use(async (ctx,next) => {
     console.log('%s %s - %sms', ctx.method, ctx.url, ms);
 });
 
-router.get('/api/wallets', async (ctx) => {
-    ctx.body = "List of users...";
+router.post(BASE_URL, async (ctx) => {
+    let credentials = ctx.request.body;
+    console.log(credentials);
+    let result = await checkCredentials(credentials);
+
+    if (result == 1) {
+        ctx.body = "User connected";
+        ctx.status = 200;
+    } else {
+        ctx.body = "Wrong credentials";
+        ctx.status = 400;
+    }
 });
 
+router.post(BASE_URL + '/create', async (ctx) => {
+    let fullUserInfos = ctx.request.body;
+    console.log('Receiving create account request: ' + ctx.request.body);
+    await createCredentials(fullUserInfos)
+        .then( async (successObject) => {
+            try {
+                console.log("data: " + JSON.stringify(successObject.data, null, 2));
+                let params = {
+                    Message: JSON.stringify(successObject.data, null, 2),
+                    TopicArn: "arn:aws:sns:us-east-1:595534413965:authentication.fifo",
+                    MessageGroupId: "randomId",
+                    MessageDeduplicationId: Object.keys(db.credentials).length.toString(),
+                }
 
-router.get('/api/', async (ctx) => {
-    ctx.body = "API ready to receive requests";
+                await snsClient.send(new PublishCommand(params));
+            } catch (e) {
+                console.log("error: " + e);
+            }
+        });
+
+    ctx.body = "Credentials created";
 });
 
-router.get('/', async (ctx) => {
-    ctx.body = "Ready to receive requests";
+router.put(BASE_URL + '/update-password', async (ctx) => {
+    let credentials = ctx.request.body;
+    let credentialsToUpdate = db.credentials.find(credential => credential.email == credentials.email);
+
+    if (credentialsToUpdate != null) {
+        await updatePassword(credentials);
+        ctx.body = "Password updated";
+    } else {
+        ctx.body = "No user found for this email"
+        ctx.status = 406;
+    }
+
+});
+
+router.delete(BASE_URL + '/delete', async (ctx) => {
+    let credentials = ctx.request.body;
+    let credentialsToDelete = db.credentials.find(credential => credential.email == credentials.email);
+
+    if (credentialsToDelete != null) {
+        await deleteCredentials(credentials);
+        ctx.body = "Credentials deleted";
+    } else {
+        ctx.body = "No user found for this email"
+        ctx.status = 406;
+    }
 });
 
 app.use(router.routes()).use(router.allowedMethods());
