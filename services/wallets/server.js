@@ -154,20 +154,15 @@ receiveMessageFromQueue();
              console.log(err, err.stack);
            } else {
              if (!data.Messages) {
-               console.log('Nothing to process');
+               console.log('"Processing wallet exchange: Nothing to process');
                return receiveMessageFromQueue();
              }
 
-             //TODO: DO THINGS TO UPDATE PROJECTS
-             console.log(data.Messages[0].Body)
              let userInfos = JSON.parse(data.Messages[0].Body).Message;
-             console.log("userInfos: " + userInfos);
-             //createUser(JSON.parse(userInfos));
-             console.log("---------")
+
              exchangeWalletToWallet(JSON.parse(userInfos));
 
-             console.log("---------")
-             console.log(data);
+             console.log("Wallet: data received: " + data);
 
              const deleteParams = {
                QueueUrl: queueUrl,

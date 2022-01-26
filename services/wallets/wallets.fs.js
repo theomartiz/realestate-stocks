@@ -14,7 +14,7 @@ const createWallet = async (newWallet, id) => {
     fs.writeFile("db.json", data, finished);
 
     function finished(){
-        console.log("db updated")
+        console.log("Wallet: db updated")
     }
 
 }
@@ -99,41 +99,41 @@ const exchangeWalletToWallet = async (jsonQuery) => {
     var amount= jsonQuery.amount;
 
 
-    console.log('userIdBuy: ' + userIdBuy);
-    console.log('userIdSell: ' + userIdSell);
-    console.log('projectId: ' + projectId);
-    console.log('amount: ' + amount);
+    console.log('Wallet: userIdBuy: ' + userIdBuy);
+    console.log('Wallet: userIdSell: ' + userIdSell);
+    console.log('Wallet: projectId: ' + projectId);
+    console.log('Wallet: amount: ' + amount);
 
 
     var walletBuy = await getWalletById(userIdBuy);
     var walletSell = await getWalletById(userIdSell);
 
-    console.log('walletBuy: ' + walletBuy.userId);
-    console.log('walletSell: ' + walletSell.userId);
+    console.log('Wallet: walletBuy: ' + walletBuy.userId);
+    console.log('Wallet: walletSell: ' + walletSell.userId);
 
 
     var walletSellPartOwned = await getWalletValueByProjectId(userIdSell, projectId);
 
-    console.log('walletSellPartOwned: ' + walletSellPartOwned);
+    console.log('Wallet: walletSellPartOwned: ' + walletSellPartOwned);
 
     //If the seller has the shares
     if (walletSellPartOwned != -1 && walletSellPartOwned >= amount) {
       var partOwnedIndexSell = walletSell.projects.findIndex((project) => project.projectId == projectId);
       walletSell.projects[partOwnedIndexSell].partOwned = parseInt(walletSell.projects[partOwnedIndexSell].partOwned) - parseInt(amount);
 
-      console.log('partOwnedIndexSell: ' + partOwnedIndexSell);
-      console.log('partOwnedSellAfterTransaction: ' + walletSell.projects[partOwnedIndexSell].partOwned);
+      console.log('Wallet: partOwnedIndexSell: ' + partOwnedIndexSell);
+      console.log('Wallet: partOwnedSellAfterTransaction: ' + walletSell.projects[partOwnedIndexSell].partOwned);
 
 
       var partOwnedIndexBuy = walletBuy.projects.findIndex((project) => project.projectId == projectId);
 
-      console.log('partOwnedIndexBuy: ' + partOwnedIndexBuy);
+      console.log('Wallet: partOwnedIndexBuy: ' + partOwnedIndexBuy);
 
       //If the buyer already has shares
       if(partOwnedIndexBuy != -1){
         walletBuy.projects[partOwnedIndexBuy].partOwned = parseInt(walletBuy.projects[partOwnedIndexBuy].partOwned) + parseInt(amount);
 
-        console.log('partOwnedBuy: ' + walletBuy.projects[partOwnedIndexBuy].partOwned);
+        console.log('Wallet: partOwnedBuy: ' + walletBuy.projects[partOwnedIndexBuy].partOwned);
 
       }else{
         var length = walletBuy.projects.length;
@@ -145,7 +145,7 @@ const exchangeWalletToWallet = async (jsonQuery) => {
 
         walletBuy.projects[length] = project;
 
-        console.log('partOwnedBuy: ' + walletBuy.projects[length].partOwned);
+        console.log('Wallet: partOwnedBuy: ' + walletBuy.projects[length].partOwned);
 
       }
 
@@ -156,12 +156,12 @@ const exchangeWalletToWallet = async (jsonQuery) => {
       fs.writeFile("db.json", data, finished);
 
     }else{
-      console.log("Seller wallet doesnt have enough shares")
+      console.log("Wallet: Seller wallet doesnt have enough shares")
       return -1;
     }
 
     function finished(){
-        console.log("db updated")
+        console.log("Wallet: db updated")
     }
 
 }
