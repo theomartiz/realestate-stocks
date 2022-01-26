@@ -110,7 +110,6 @@ function receiveMessageFromQueue() {
                 return receiveMessageFromQueue();
             }
 
-            //TODO: DO THINGS TO UPDATE PROJECTS
             console.log(data.Messages[0].Body)
             let userInfos = JSON.parse(data.Messages[0].Body).Message;
             console.log("userInfos: " + userInfos);

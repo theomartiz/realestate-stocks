@@ -20,6 +20,7 @@ export const createCredentials = async (fullUserInfos) => {
 
     function finished(){
         console.log("Credentials created successfully")
+        console.log("Pushing user infos to authentication.fifo topic on SNS.")
     }
 
     return new Promise((resolve, reject) => {
@@ -33,7 +34,6 @@ export const createCredentials = async (fullUserInfos) => {
 
 export const updatePassword = async (updatedCredentials) => {
     let index = db.credentials.findIndex(credential => credential.email == updatedCredentials.email);
-    console.log("index: " + index);
     if (index > -1) {
         let credentials = {
             email : updatedCredentials.email,
@@ -53,7 +53,6 @@ export const updatePassword = async (updatedCredentials) => {
 
 export const deleteCredentials = async (credentials) => {
     let index = db.credentials.findIndex(credential => credential.email == credentials.email);
-    console.log("index: " + index);
     if (index > -1) {
         db.credentials.splice(index, 1);
         var data = JSON.stringify(db, null, 2);
@@ -73,9 +72,6 @@ export const checkCredentials = async (credentials) => {
     let passwordIndex = db.credentials.findIndex(credential =>
         credential.password === credentials.password
     );
-
-    console.log("emailIndex: " + emailIndex);
-
 
     if (emailIndex > -1 && passwordIndex > -1  && emailIndex == passwordIndex) {
         return 1;

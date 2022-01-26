@@ -35,7 +35,7 @@ router.post(BASE_URL, async (ctx) => {
 
 router.post(BASE_URL + '/create', async (ctx) => {
     let fullUserInfos = ctx.request.body;
-    console.log(ctx.request.body);
+    console.log('Receiving create account request: ' + ctx.request.body);
     await createCredentials(fullUserInfos)
         .then( async (successObject) => {
             try {
@@ -81,7 +81,6 @@ router.delete(BASE_URL + '/delete', async (ctx) => {
         ctx.body = "No user found for this email"
         ctx.status = 406;
     }
-    // use sns
 });
 
 app.use(router.routes()).use(router.allowedMethods());
