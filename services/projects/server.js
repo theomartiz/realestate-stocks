@@ -23,7 +23,7 @@ const params = {
     QueueUrl: queueUrl,
     MaxNumberOfMessages: 1,
     VisibilityTimeout: 5,
-    WaitTimeSeconds: 5
+    WaitTimeSeconds: 20
 };
 
 let router = koaRouter();
@@ -95,15 +95,21 @@ receiveMessageFromQueue();
 
 function receiveMessageFromQueue(){
     sqs.receiveMessage(params, (err, data) => {
+        console.log('Projects: Polling messages from funding queue...');
         if (err) {
             console.log(err, err.stack);
           } else {
             if (!data.Messages) { 
-              console.log('Nothing to process');
+              console.log('Projects: Nothing to process in funding queue');
               return receiveMessageFromQueue();          
             }
             
-            //TODO: DO THINGS TO UPDATE PROJECTS
+            //TODO: DO THINGS TO UPDATE PROJECTS                
+            var jsonBody = JSON.parse(data.Messages[0].Body);
+            var order = JSON.parse(jsonBody.Message);
+            console.log("Projects: Received order with id: " + order.projectId + data);
+            completeProjectOrder(order.projectId, order.amount);
+
             const deleteParams = {
               QueueUrl: queueUrl,
               ReceiptHandle: data.Messages[0].ReceiptHandle
@@ -112,12 +118,36 @@ function receiveMessageFromQueue(){
               if (err) {
                 console.log(err, err.stack);
               } else {
-                console.log('Successfully deleted message from queue');
+                console.log('Projects: Message has been treated and successfully deleted from queue');
                 return receiveMessageFromQueue();                
               }
             });
         }  
     });              
+}
+
+async function  completeProjectOrder(projectId, orderStockAmount){
+    var project = await getProjectById(projectId);
+
+    if (project.availableStocks >= orderStockAmount){
+        var updatedProject = {
+            id : parseInt(projectId),
+            name: project.name,
+            buildingType: project.buildingType,
+            address: project.address,
+            totalStocks: project.totalStocks,
+            stockPrice: project.stockPrice,
+            availableStocks: (project.availableStocks - orderStockAmount),
+            description: project.description,
+            postDate: project.postDate,
+            contributors: project.contributors,
+        }
+        updateProjectById(updatedProject, projectId);
+        console.log("Projects: Purchase completed successfully, they are " + (project.availableStocks - orderStockAmount) + " stocks left for this project.");
+    }else{
+        console.log("Projects: Purchase canceled, they are only " + project.availableStocks + " stocks available!");
+    }
+
 }
    
 

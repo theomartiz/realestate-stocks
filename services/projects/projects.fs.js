@@ -50,24 +50,28 @@ const updateProjectById = async (newProject, oldProjectId) => {
             name: newProject.name,
             buildingType: newProject.buildingType,
             address: newProject.address,
-            fundingObjective: newProject.fundingObjective,
-            currentFunding: newProject.currentFunding,
+            totalStocks: newProject.totalStocks,
+            stockPrice: newProject.stockPrice,
+            availableStocks: newProject.availableStocks,
             description: newProject.description,
-            expectedYield: newProject.expectedYield,
             postDate: newProject.postDate,
-            endDate: newProject.endDate,
-            contributions: newProject.contributions,
+            contributors: newProject.contributors,
         }
         db.projects.splice(projectToUpdateIndex, 1, project);
 
         var data = JSON.stringify(db, null, 2);
         fs.writeFile("db.json", data, finished);
     }else{
+        idNotFound();
         return -1;
     }
    
     function finished(){
         console.log("Project with id: " + project.id + " has been updated.");
+    }
+
+    function idNotFound(){
+        console.log("Project with id: " + project.id + " inexistant.");
     }
 }
 
