@@ -15,7 +15,7 @@ const params = {
     QueueUrl: queueUrl,
     MaxNumberOfMessages: 1,
     VisibilityTimeout: 5,
-    WaitTimeSeconds: 5
+    WaitTimeSeconds: 20
 };
 
 const koa = require('koa');
@@ -101,6 +101,7 @@ router.delete(BASE_URL + '/:id', async (ctx) => {
 receiveMessageFromQueue();
 
 function receiveMessageFromQueue() {
+    console.log('Pulling from users queue from sqs');
     sqs.receiveMessage(params, (err, data) => {
         if (err) {
             console.log(err, err.stack);
@@ -110,13 +111,11 @@ function receiveMessageFromQueue() {
                 return receiveMessageFromQueue();
             }
 
-            console.log(data.Messages[0].Body)
+            console.log("Received data: ", data.Messages[0].Body);
             let userInfos = JSON.parse(data.Messages[0].Body).Message;
             console.log("userInfos: " + userInfos);
             createUser(JSON.parse(userInfos));
 
-
-            console.log(data);
             const deleteParams = {
                 QueueUrl: queueUrl,
                 ReceiptHandle: data.Messages[0].ReceiptHandle
