@@ -57,10 +57,10 @@ router.post(BASE_URL, async (ctx) => {
         const run = async () => {
             try {
             const data = await snsClient.send(new PublishCommand(params));
-            console.log("Order funding success.",  data);
+            console.log("Pushing order number",Object.keys(db.orders).length,"to ordersFunding on SNS.");
             return data; // For unit tests.
             } catch (err) {
-            console.log("Error (order funding)", err.stack);
+            console.log("Cannot push order number",Object.keys(db.orders).length,"to ordersFunding on SNS.");
             }
         };
         run();
@@ -77,10 +77,10 @@ router.post(BASE_URL, async (ctx) => {
         const run = async () => {
             try {
             const data = await snsClient.send(new PublishCommand(params));
-            console.log("Order running success.",  data);
+            console.log("Pushing order number",Object.keys(db.orders).length,"to ordersRunning on SNS.");
             return data; // For unit tests.
             } catch (err) {
-            console.log("Error (order running)", err.stack);
+                console.log("Cannot push order number",Object.keys(db.orders).length,"to ordersRunning on SNS.");
             }
         };
         run();
