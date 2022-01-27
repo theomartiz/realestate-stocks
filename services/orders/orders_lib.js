@@ -53,7 +53,7 @@ export const updateOrderById = async (newOrder, oldOrderId) => {
     }
    
     function finished(){
-        console.log("order with id: " + order.id + " has been updated.");
+        console.log("Order with id: " + order.id + " has been updated.");
     }
 }
 
@@ -69,7 +69,7 @@ export const removeOrderById = async (id) => {
     }
    
     function finished(){
-        console.log("order with id: " + id + " removed from database.");
+        console.log("Order with id: " + id + " removed from database.");
     }
 
 }
