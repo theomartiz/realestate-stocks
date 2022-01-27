@@ -10,7 +10,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@aws-sdk/client-sns": "^3.48.0",
     "@koa/router": "^10.1.1",
-    "koa": "^2.13.4"
-  }
+    "aws-sdk": "^2.1062.0",
+    "koa": "^2.13.4",
+    "koa-bodyparser": "^4.3.0"
+  },
+  "type": "module"
 }
