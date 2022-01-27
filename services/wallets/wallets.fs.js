@@ -105,23 +105,30 @@ export const exchangeWalletToWallet = async (jsonQuery) => {
 
 
     var walletBuy = await getWalletById(userIdBuy);
-    var walletSell = await getWalletById(userIdSell);
+
+    if (userIdSell != null) {
+      var walletSell = await getWalletById(userIdSell);
+      console.log('Wallet: walletSell: ' + walletSell.userId);
+      var walletSellPartOwned = await getWalletValueByProjectId(userIdSell, projectId);
+
+      console.log('Wallet: walletSellPartOwned: ' + walletSellPartOwned);
+    }
 
     console.log('Wallet: walletBuy: ' + walletBuy.userId);
-    console.log('Wallet: walletSell: ' + walletSell.userId);
 
-
-    var walletSellPartOwned = await getWalletValueByProjectId(userIdSell, projectId);
-
-    console.log('Wallet: walletSellPartOwned: ' + walletSellPartOwned);
 
     //If the seller has the shares
-    if (walletSellPartOwned != -1 && walletSellPartOwned >= amount) {
-      var partOwnedIndexSell = walletSell.projects.findIndex((project) => project.projectId == projectId);
-      walletSell.projects[partOwnedIndexSell].partOwned = parseInt(walletSell.projects[partOwnedIndexSell].partOwned) - parseInt(amount);
+    if ((walletSellPartOwned == null || walletSellPartOwned != -1) && walletSellPartOwned >= amount) {
+      if(walletSellPartOwned != null){
+        var partOwnedIndexSell = walletSell.projects.findIndex((project) => project.projectId == projectId);
+        walletSell.projects[partOwnedIndexSell].partOwned = parseInt(walletSell.projects[partOwnedIndexSell].partOwned) - parseInt(amount);
 
-      console.log('Wallet: partOwnedIndexSell: ' + partOwnedIndexSell);
-      console.log('Wallet: partOwnedSellAfterTransaction: ' + walletSell.projects[partOwnedIndexSell].partOwned);
+        console.log('Wallet: partOwnedIndexSell: ' + partOwnedIndexSell);
+        console.log('Wallet: partOwnedSellAfterTransaction: ' + walletSell.projects[partOwnedIndexSell].partOwned);
+
+        db.wallets.splice(partOwnedIndexSell, 1, walletSell);
+
+      }
 
 
       var partOwnedIndexBuy = walletBuy.projects.findIndex((project) => project.projectId == projectId);
@@ -148,7 +155,6 @@ export const exchangeWalletToWallet = async (jsonQuery) => {
 
       }
 
-      db.wallets.splice(partOwnedIndexSell, 1, walletSell);
       db.wallets.splice(partOwnedIndexBuy, 1, walletBuy);
 
       var data = JSON.stringify(db, null, 2);

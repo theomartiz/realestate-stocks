@@ -2,6 +2,7 @@ import koa from 'koa';
 import koaRouter from '@koa/router';
 import bodyParser from 'koa-bodyparser';
 import db from "./db.json";
+import fetch from "node-fetch";
 
 
 import { createWallet, getAllWallets, getWalletById, removeWalletById, updateWalletById, getWalletValueByProjectId, getWalletValueByUserId, exchangeWalletToWallet } from './wallets.fs.js';
@@ -113,8 +114,7 @@ router.get(BASE_URL + '/:userId' + '/sharesValue' + '/:projectId', async (ctx) =
 
     var partOwned = await getWalletValueByProjectId(userId, projectId);
 
-    var project = await getProjectById(projectId);
-    var stockPrice = project.stockPrice;
+    var stockPrice = await GETprojectbyID(projectId);
 
     if(partOwned != -1){
       ctx.body = "This user has: " + (partOwned) + " shares of the project:" + projectId
@@ -137,8 +137,8 @@ router.get(BASE_URL + '/:userId' + '/sharesValue', async (ctx) => {
     if(projects != -1){
 
       for (var i = 0; i < projects.length; i++) {
-        var project = await getProjectById(projects[i].projectId);
-        var stockPrice = project.fundingObjective;
+
+        var stockPrice = await GETprojectbyID(projects[i].projectId);
 
         totalValue += (stockPrice*(projects[i].partOwned));
       }
@@ -159,7 +159,7 @@ receiveMessageFromQueue();
              console.log(err, err.stack);
            } else {
              if (!data.Messages) {
-               console.log('"Processing wallet exchange: Nothing to process');
+               console.log('Processing wallet exchange: Nothing to process');
                return receiveMessageFromQueue();
              }
 
@@ -185,6 +185,13 @@ receiveMessageFromQueue();
      });
  }
 
+ export const GETprojectbyID = async (projectId) => {
+   const url = 'http://RealE-ECSAL-2VX38BMV3WF5-560390223.us-east-1.elb.amazonaws.com/api/projects/' + projectId;
+   const response = await fetch(url);
+   const myJson = await response.json(); //extract JSON from the http response
+
+   return myJson.stockPrice;
+ }
 
 app.use(router.routes()).use(router.allowedMethods());
 
