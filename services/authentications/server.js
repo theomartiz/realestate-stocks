@@ -28,15 +28,15 @@ router.get("/", async (ctx) => {
 router.post(BASE_URL, async (ctx) => {
     let credentials = ctx.request.body;
     console.log(credentials);
-    let result = await checkCredentials(credentials);
-
-    if (result == 1) {
-        ctx.body = "User connected";
-        ctx.status = 200;
-    } else {
-        ctx.body = "Wrong credentials";
-        ctx.status = 400;
-    }
+    await checkCredentials(credentials)
+        .then((resultObject) => {
+            try {
+                ctx.body = JSON.stringify(resultObject.data, null, 2);
+                ctx.status = parseInt(JSON.stringify(resultObject.code, null, 2));
+            } catch (e) {
+                console.log('error: ' + e);
+            }
+        });
 });
 
 router.post(BASE_URL + '/create', async (ctx) => {

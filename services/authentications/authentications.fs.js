@@ -70,14 +70,31 @@ export const checkCredentials = async (credentials) => {
             credential.email == credentials.email
     );
     let passwordIndex = db.credentials.findIndex(credential =>
-        credential.password === credentials.password
+        credential.password == credentials.password
     );
+    let userId = db.credentials.find(credential => credential.email == credentials.email).id;
 
-    if (emailIndex > -1 && passwordIndex > -1  && emailIndex == passwordIndex) {
-        return 1;
-    } else {
-        return -1;
-    }
+
+    return new Promise((resolve, reject) => {
+        if (emailIndex > -1 && passwordIndex > -1  && emailIndex == passwordIndex) {
+            const successObject = {
+                msg: "User connected",
+                data: userId,
+                code: 200,
+            };
+            resolve(successObject);
+            console.log(successObject.msg + ": " + successObject.data);
+        } else {
+           const failedObject = {
+               msg: "Wrong email or password",
+               data: "null",
+               code: 400,
+           };
+            console.log("Wrong email or password");
+            resolve(failedObject);
+        }
+
+    })
 }
 
 function getFirstAvailableId(array){
