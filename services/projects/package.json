@@ -1,5 +1,6 @@
 {
   "name": "projects",
+  "type": "module",
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
@@ -11,6 +12,8 @@
   "license": "ISC",
   "dependencies": {
     "@koa/router": "^10.1.1",
-    "koa": "^2.13.4"
+    "aws-sdk": "^2.1065.0",
+    "koa": "^2.13.4",
+    "koa-bodyparser": "^4.3.0"
   }
 }

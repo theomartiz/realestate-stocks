@@ -1,8 +1,7 @@
+import db from "./db.json"
+import * as fs from "fs";
 
-var fs = require('fs');
-const db = require('./db.json');
-
-const createProject = async (newProject) => {
+export const createProject = async (newProject) => {
     //We retrieve the first id that is available
     var firstAvailableId = getFirstAvailableId(db.projects);
 
@@ -31,15 +30,15 @@ const createProject = async (newProject) => {
 
 }
 
-const getAllProjects = async () => {
+export const getAllProjects = async () => {
     return db.projects;
 }
 
-const getProjectById = async (id) => {
+export const getProjectById = async (id) => {
     return db.projects.find((project) => project.id == id);
 }
 
-const updateProjectById = async (newProject, oldProjectId) => {
+export const updateProjectById = async (newProject, oldProjectId) => {
     //Find the project with given id in the db
     var projectToUpdateIndex = db.projects.findIndex((proj) => proj.id == oldProjectId);
 
@@ -75,7 +74,7 @@ const updateProjectById = async (newProject, oldProjectId) => {
     }
 }
 
-const removeById = async (id) => {
+export const removeById = async (id) => {
     //Find the project with given id in the db
     var projectIndex = db.projects.findIndex((project) => project.id == id);
     if(projectIndex >= 0){
@@ -92,7 +91,7 @@ const removeById = async (id) => {
 
 }
 
-function getFirstAvailableId(array){
+export function getFirstAvailableId(array){
     for(var i = 1; i <= array.length; i++){
         if(array.findIndex((obj) => obj.id == i) == -1){
             return i;
@@ -101,11 +100,3 @@ function getFirstAvailableId(array){
     return  array.length + 1;
 }
 
-module.exports =
-{
-    createProject,
-    getAllProjects,
-    getProjectById,
-    removeById,
-    updateProjectById
-}

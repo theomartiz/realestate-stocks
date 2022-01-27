@@ -1,14 +1,13 @@
-const koa = require('koa');
-const koaRouter = require('@koa/router');
-const bodyParser  = require('koa-bodyparser');
-const db = require('./db.json');
+import koa from 'koa';
+import koaRouter from '@koa/router';
+import bodyParser from 'koa-bodyparser';
+import db from "./db.json";
 
 
-const { createWallet, getAllWallets, getWalletById, removeWalletById, updateWalletById, getWalletValueByProjectId, getWalletValueByUserId, exchangeWalletToWallet } = require('./wallets.fs');
-const {getProjectById} = require('../projects/projects.fs');
+import { createWallet, getAllWallets, getWalletById, removeWalletById, updateWalletById, getWalletValueByProjectId, getWalletValueByUserId, exchangeWalletToWallet } from './wallets.fs.js';
 
 // Load the AWS SDK for Node.js
- const AWS = require('aws-sdk');
+import AWS from "aws-sdk";
  // Set the region
  AWS.config.update({region: 'us-east-1'});
  AWS.config.credentials
@@ -36,10 +35,16 @@ const BASE_URL = '/api/wallets';
 
 
 app.use(async (ctx,next) => {
-    const start = new Date;
-    await next();
-    const ms = new Date - start;
-    console.log('%s %s - %sms', ctx.method, ctx.url, ms);
+    if (ctx.url !== "/") {
+        const start = new Date;
+        await next();
+        const ms = new Date - start;
+        console.log('%s | %s %s - %sms', start, ctx.method, ctx.url, ms);
+    }
+});
+
+router.get("/", async (ctx) => {
+    ctx.body = "Welcome to the wallets service";
 });
 
 //Get All wallets

@@ -20,3 +20,5 @@ In the services directory (`cd services`) : `docker build -t [service-name] ./[s
 - Update the service in the ECS cluster
 `aws ecs update-service --cluster RealEstateStack-ECSCluster-tDDiPpr0cB66 --region us-east-1 --service [service-name] --force-new-deployment`
 A status JSON will appear if the update has been launched successfully (you can press q to close)
+
+aws elbv2 create-target-group --profile lab --region us-east-1 --name drop-traffic --protocol HTTP --port 80 --vpc-id vpc-09bce361d667fedc8 --healthy-threshold-count 2 --unhealthy-threshold-count 2 --health-check-timeout-seconds 5 --health-check-interval-seconds 6

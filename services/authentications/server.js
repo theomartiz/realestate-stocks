@@ -1,5 +1,5 @@
 import {PublishCommand} from "@aws-sdk/client-sns";
-import  {snsClient} from "./libs/snsClient.js";
+import {snsClient} from "./libs/snsClient.js";
 import koaRouter from '@koa/router';
 import koa from 'koa';
 import bodyParser from 'koa-bodyparser';
@@ -13,10 +13,16 @@ app.use(bodyParser());
 const BASE_URL = "/api/authentications"
 
 app.use(async (ctx,next) => {
-    const start = new Date;
-    await next();
-    const ms = new Date - start;
-    console.log('%s %s - %sms', ctx.method, ctx.url, ms);
+    if (ctx.url !== "/") {
+        const start = new Date;
+        await next();
+        const ms = new Date - start;
+        console.log('%s | %s %s - %sms', start, ctx.method, ctx.url, ms);
+    }
+});
+
+router.get("/", async (ctx) => {
+    ctx.body = "Welcome to the authentication API";
 });
 
 router.post(BASE_URL, async (ctx) => {

@@ -1,5 +1,9 @@
 // Load the AWS SDK for Node.js
-const AWS = require('aws-sdk');
+import AWS from "aws-sdk";
+import koa from 'koa';
+import koaRouter from '@koa/router';
+import bodyParser from 'koa-bodyparser';
+import db from "./db.json";
 // Set the region
 AWS.config.update({region: 'us-east-1'});
 AWS.config.credentials
@@ -18,13 +22,8 @@ const params = {
     WaitTimeSeconds: 20
 };
 
-const koa = require('koa');
-const koaRouter = require('@koa/router');
-const bodyParser  = require('koa-bodyparser');
-const db = require('./db.json');
 
-
-const { getAllUsers, getUser, createUser, updateUser, deleteUser} = require('./users.fs')
+import { getAllUsers, getUser, createUser, updateUser, deleteUser} from './users.fs.js';
 
 
 let router = koaRouter();
@@ -33,10 +32,16 @@ const BASE_URL = '/api/users'
 
 app.use(bodyParser());
 app.use(async (ctx,next) => {
-    const start = new Date;
-    await next();
-    const ms = new Date - start;
-    console.log('%s %s - %sms', ctx.method, ctx.url, ms);
+    if (ctx.url !== "/") {
+        const start = new Date;
+        await next();
+        const ms = new Date - start;
+        console.log('%s | %s %s - %sms', start, ctx.method, ctx.url, ms);
+    }
+});
+
+router.get("/", async (ctx) => {
+    ctx.body = "Welcome to the users service";
 });
 
 /**

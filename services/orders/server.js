@@ -5,7 +5,6 @@ import koa from 'koa';
 import koaRouter from '@koa/router';
 
 import db from "./db.json";
-import fs from "fs";
 import {createOrder, getAllOrders, getOrderById, removeOrderById, updateOrderById} from './orders_lib.js';
 
 let router = koaRouter();
@@ -16,10 +15,16 @@ import bodyParser from 'koa-bodyparser';
 app.use(bodyParser());
 
 app.use(async (ctx,next) => {
-    const start = new Date;
-    await next();
-    const ms = new Date - start;
-    console.log('%s %s - %sms', ctx.method, ctx.url, ms);
+    if (ctx.url !== "/") {
+        const start = new Date;
+        await next();
+        const ms = new Date - start;
+        console.log('%s | %s %s - %sms', start, ctx.method, ctx.url, ms);
+    }
+});
+
+router.get("/", async (ctx) => {
+    ctx.body = "Welcome to the orders service";
 });
 
 

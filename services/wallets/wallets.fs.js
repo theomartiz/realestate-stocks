@@ -1,8 +1,7 @@
+import db from "./db.json"
+import * as fs from "fs";
 
-var fs = require('fs');
-const db = require('./db.json');
-
-const createWallet = async (newWallet, id) => {
+export const createWallet = async (newWallet, id) => {
     var wallet = {
         userId : id,
         projects: newWallet.projects,
@@ -19,15 +18,15 @@ const createWallet = async (newWallet, id) => {
 
 }
 
-const getAllWallets = async () => {
+export const getAllWallets = async () => {
     return db.wallets;
 }
 
-const getWalletById = async (id) => {
+export const getWalletById = async (id) => {
     return db.wallets.find((wallet) => wallet.userId == id);
 }
 
-const updateWalletById = async (newWallet, oldWalletId) => {
+export const updateWalletById = async (newWallet, oldWalletId) => {
     //Find the wallet with given id in the db
     var walletToUpdateIndex = db.wallets.findIndex((wall) => wall.userId == oldWalletId);
 
@@ -50,7 +49,7 @@ const updateWalletById = async (newWallet, oldWalletId) => {
     }
 }
 
-const removeWalletById = async (id) => {
+export const removeWalletById = async (id) => {
     //Find the wallet with given id in the db
     var walletIndex = db.wallets.findIndex((wallet) => wallet.userId == id);
     if(walletIndex >= 0){
@@ -67,7 +66,7 @@ const removeWalletById = async (id) => {
 
 }
 
-const getWalletValueByProjectId = async (userId, projectId) => {
+export const getWalletValueByProjectId = async (userId, projectId) => {
     var wallet = db.wallets.find((wallet) => wallet.userId == userId);
 
     var partOwnedIndex = wallet.projects.findIndex((project) => project.projectId == projectId);
@@ -81,7 +80,7 @@ const getWalletValueByProjectId = async (userId, projectId) => {
 }
 
 
-const getWalletValueByUserId = async (userId) => {
+export const getWalletValueByUserId = async (userId) => {
     var wallet = db.wallets.find((wallet) => wallet.userId == userId);
 
     if (wallet != null) {
@@ -91,7 +90,7 @@ const getWalletValueByUserId = async (userId) => {
     }
 }
 
-const exchangeWalletToWallet = async (jsonQuery) => {
+export const exchangeWalletToWallet = async (jsonQuery) => {
     //Find the wallet with given id in the db
     var userIdBuy= jsonQuery.userIdBuy;
     var userIdSell= jsonQuery.userIdSell;
@@ -164,18 +163,4 @@ const exchangeWalletToWallet = async (jsonQuery) => {
         console.log("Wallet: db updated")
     }
 
-}
-
-
-
-module.exports =
-{
-    createWallet,
-    getAllWallets,
-    getWalletById,
-    removeWalletById,
-    updateWalletById,
-    getWalletValueByProjectId,
-    getWalletValueByUserId,
-    exchangeWalletToWallet
 }

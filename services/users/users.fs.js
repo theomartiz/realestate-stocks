@@ -1,7 +1,7 @@
-let fs = require('fs');
-const db = require('./db.json');
+import db from "./db.json"
+import * as fs from "fs";
 
-const createUser = async (newUser) => {
+export const createUser = async (newUser) => {
     db.users.push(newUser);
     let data = JSON.stringify(db, null, 2);
     fs.writeFile("db.json", data, finished);
@@ -11,15 +11,15 @@ const createUser = async (newUser) => {
     }
 }
 
-const getAllUsers = async () => {
+export const getAllUsers = async () => {
     return db.users;
 }
 
-const getUser = async (id) => {
+export const getUser = async (id) => {
     return db.users.find(user => user.id == id);
 }
 
-const updateUser = async (updatedUser, id) => {
+export const updateUser = async (updatedUser, id) => {
     let userIndex = db.users.findIndex(user => user.id == id);
 
     if (userIndex != -1) {
@@ -37,7 +37,7 @@ const updateUser = async (updatedUser, id) => {
     }
 }
 
-const deleteUser = async (id) => {
+export const deleteUser = async (id) => {
     let userIndex = db.users.findIndex(user => user.id == id);
 
     if (userIndex > -1) {
@@ -48,12 +48,4 @@ const deleteUser = async (id) => {
             console.log("User with id: " + id + " removed from database.");
         }
     }
-}
-
-module.exports = {
-    getAllUsers,
-    getUser,
-    createUser,
-    updateUser,
-    deleteUser,
 }
