@@ -1,0 +1,179 @@
+{
+	"info": {
+		"_postman_id": "f04a7d59-b00d-4178-807c-b0d008909a81",
+		"name": "Orders collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Running order example",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"orderDate\": \"1642544999\",\r\n    \"userIdBuy\": \"1\",\r\n    \"userIdSell\": \"2\",\r\n    \"projectId\": \"1\",\r\n    \"amount\": \"150\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/api/orders/",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"orders",
+						""
+					]
+				},
+				"description": "Running order request from user 2 to user 1 on project 1 with 150 shares"
+			},
+			"response": []
+		},
+		{
+			"name": "Funding order example",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"orderDate\": \"1642544999\",\r\n    \"userIdBuy\": \"2\",\r\n    \"userIdSell\": \"0\",\r\n    \"projectId\": \"2\",\r\n    \"amount\": \"250\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/api/orders/",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"orders",
+						""
+					]
+				},
+				"description": "Funding order request for user 1 on project 2 with 250 shares"
+			},
+			"response": []
+		},
+		{
+			"name": "Retrieve all orders",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/api/orders/",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"orders",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Retrieve one order example",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/api/orders/:1",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"orders",
+						":1"
+					],
+					"variable": [
+						{
+							"key": "1",
+							"value": null
+						}
+					]
+				},
+				"description": "Retrieve order 1"
+			},
+			"response": []
+		},
+		{
+			"name": "Delete one order example",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/api/orders/:3",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"orders",
+						":3"
+					],
+					"variable": [
+						{
+							"key": "3",
+							"value": null
+						}
+					]
+				},
+				"description": "Deleting order 3"
+			},
+			"response": []
+		},
+		{
+			"name": "Update one order example",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"orderDate\": \"1642544999\",\r\n    \"userIdBuy\": \"10\",\r\n    \"userIdSell\": \"2\",\r\n    \"projectId\": \"1\",\r\n    \"amount\": \"300\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/api/orders/:2",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"orders",
+						":2"
+					],
+					"variable": [
+						{
+							"key": "2",
+							"value": null
+						}
+					]
+				},
+				"description": "Updating order 2 with new values"
+			},
+			"response": []
+		}
+	]
+}
