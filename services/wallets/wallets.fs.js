@@ -92,6 +92,7 @@ export const getWalletValueByUserId = async (userId) => {
 
 export const exchangeWalletToWallet = async (jsonQuery) => {
     //Find the wallet with given id in the db
+
     var userIdBuy= jsonQuery.userIdBuy;
     var userIdSell= jsonQuery.userIdSell;
     var projectId= jsonQuery.projectId;
@@ -116,9 +117,8 @@ export const exchangeWalletToWallet = async (jsonQuery) => {
 
     console.log('Wallet: walletBuy: ' + walletBuy.userId);
 
-
     //If the seller has the shares
-    if ((walletSellPartOwned == null || walletSellPartOwned != -1) && walletSellPartOwned >= amount) {
+    if ((walletSellPartOwned == null) || (walletSellPartOwned != -1 && walletSellPartOwned >= amount)) {
       if(walletSellPartOwned != null){
         var partOwnedIndexSell = walletSell.projects.findIndex((project) => project.projectId == projectId);
         walletSell.projects[partOwnedIndexSell].partOwned = parseInt(walletSell.projects[partOwnedIndexSell].partOwned) - parseInt(amount);
@@ -126,7 +126,9 @@ export const exchangeWalletToWallet = async (jsonQuery) => {
         console.log('Wallet: partOwnedIndexSell: ' + partOwnedIndexSell);
         console.log('Wallet: partOwnedSellAfterTransaction: ' + walletSell.projects[partOwnedIndexSell].partOwned);
 
-        db.wallets.splice(partOwnedIndexSell, 1, walletSell);
+        var indexUserIdSell = db.wallets.findIndex((wallet) => wallet.userId == userIdSell);
+
+        db.wallets.splice(indexUserIdSell, 1, walletSell);
 
       }
 
@@ -155,7 +157,8 @@ export const exchangeWalletToWallet = async (jsonQuery) => {
 
       }
 
-      db.wallets.splice(partOwnedIndexBuy, 1, walletBuy);
+      var indexUserIdBuy = db.wallets.findIndex((wallet) => wallet.userId == userIdBuy);
+      db.wallets.splice(indexUserIdBuy, 1, walletBuy);
 
       var data = JSON.stringify(db, null, 2);
       fs.writeFile("db.json", data, finished);

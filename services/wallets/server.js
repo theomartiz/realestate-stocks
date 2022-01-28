@@ -51,6 +51,7 @@ router.get("/", async (ctx) => {
 //Get All wallets
 router.get(BASE_URL, async (ctx) => {
   //Return the list of all projects in the db
+
   ctx.body = await getAllWallets();
 });
 
