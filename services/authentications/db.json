@@ -1,4 +1,9 @@
 {
   "credentials": [
+    {
+      "id": 1,
+      "email": "tmaxtuconnais@gmail.com",
+      "password": "Test123!"
+    }
   ]
 }
