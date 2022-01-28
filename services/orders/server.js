@@ -69,6 +69,25 @@ router.post(BASE_URL, async (ctx) => {
             }
         };
         run();
+
+        var params = {
+            Message: JSON.stringify(ctx.request.body, null, 2), // MESSAGE_TEXT
+            MessageGroupId: "OrdersRunning",
+            MessageDeduplicationId: Object.keys(db.orders).length,
+            TopicArn: "arn:aws:sns:us-east-1:595534413965:ordersRunning.fifo", //TOPIC_ARN
+        };
+        
+        const run2 = async () => {
+            try {
+            const data = await snsClient.send(new PublishCommand(params));
+            console.log("Pushing order number",Object.keys(db.orders).length,"to ordersRunning on SNS.");
+            return data; // For unit tests.
+            } catch (err) {
+                console.log("Cannot push order number",Object.keys(db.orders).length,"to ordersRunning on SNS.");
+            }
+        };
+        run2();
+        
     }
     else{
 
